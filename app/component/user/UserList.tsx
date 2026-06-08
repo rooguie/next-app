@@ -46,7 +46,7 @@ export default function UserList() {
         <div>
             {
                 users.map(user => (
-                    <User user={user}/>
+                    <User user={user} key={user.id}/>
                 ))
             }
 
