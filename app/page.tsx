@@ -7,6 +7,8 @@ import Counter2 from "./component/Counter2";
 import HelloProps from "./component/HelloProps";
 import InputSample from "./component/InputSample";
 import InputSample2 from "./component/InputSample2";
+import UserList from "./component/user/UserList";
+import UserList2 from "./component/user/UserList2";
 
 export default function Home() {
   return (
@@ -31,13 +33,12 @@ export default function Home() {
       <InputSample />
 
       <InputSample2 />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
+
+      <UserList />
+
+      <hr className="border border-white w-full" />
+
+      <UserList2 />
 
       <br />
       <br />
