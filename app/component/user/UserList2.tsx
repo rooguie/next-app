@@ -1,104 +1,116 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useMemo, useRef, useState } from "react";
 import UserList1 from "./UserList1";
 import CreateUser from "./CreateUser";
 
 export default function UserList2() {
-  //users의 변화를 주기 위해(등록, 삭제 수정) useState() 관리
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      username: "hong",
-      email: "publicHong@naver.com",
-      active: true,
-    },
-    {
-      id: 2,
-      username: "kim",
-      email: "kim@naver.com",
-      active: false,
-    },
-    {
-      id: 3,
-      username: "lee",
-      email: "leeTest@gmail.com",
-      active: false,
-    },
-  ]);
+    //users의 변화를 주기 위해(등록, 삭제 수정) useState() 관리
+    const [users, setUsers] = useState([
+        {
+            id: 1,
+            username: "hong",
+            email: "publicHong@naver.com",
+            active: true,
+        },
+        {
+            id: 2,
+            username: "kim",
+            email: "kim@naver.com",
+            active: false,
+        },
+        {
+            id: 3,
+            username: "lee",
+            email: "leeTest@gmail.com",
+            active: false,
+        },
+    ]);
 
-  // users 객체가 있는 위치에서 useState() 구성
-  // user 객체를 생성 => users 추가
+    // users 객체가 있는 위치에서 useState() 구성
+    // user 객체를 생성 => users 추가
 
-  // id 설정
-  const nextId = useRef(4); //user값을 추가할 때 사용할 아이디
+    // id 설정
+    const nextId = useRef(4); //user값을 추가할 때 사용할 아이디
 
-  //createUser 값을 관리 useState()
-  const [inputs, setInputs] = useState({
-    username: "",
-    email: "",
-  });
-
-  const { username, email } = inputs;
-
-  //onChange 함수
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setInputs({
-      ...inputs,
-      [name]: value,
+    //createUser 값을 관리 useState()
+    const [inputs, setInputs] = useState({
+        username: "",
+        email: "",
     });
-  };
 
-  //등록을 위한 함수
-  const onCreate = () => {
-    //onChange()에서 입력받은 객체 users 추가
+    const { username, email } = inputs;
 
-    const user = {
-      id: nextId.current,
-      username: username,
-      email: email,
-      active: false,
+    //onChange 함수
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setInputs({
+            ...inputs,
+            [name]: value,
+        });
     };
 
-    //기존 users에 추가
-    //push / pop처럼 직접 객체에 영향을 주는 함수는 쓰지 않음
-    setUsers([...users].concat(user));
-    nextId.current += 1;
+    //등록을 위한 함수
+    const onCreate = () => {
+        //onChange()에서 입력받은 객체 users 추가
 
-    setInputs({
-      username: "",
-      email: "",
-    });
-  };
+        const user = {
+            id: nextId.current,
+            username: username,
+            email: email,
+            active: false,
+        };
 
-  //삭제 설정
-  const onRemove = (id: number) => {
-    //users.id 값과 파라미터의 id가 일치하지 않는 요소만 추출하여 리턴
-    //filter
-    setUsers(users.filter((user) => user.id !== id));
-  };
+        //기존 users에 추가
+        //push / pop처럼 직접 객체에 영향을 주는 함수는 쓰지 않음
+        setUsers([...users].concat(user));
+        nextId.current += 1;
 
-  //토글 설정
-  const onToggle = (id: number) => {
-    setUsers(
-      users.map((user) =>
-        user.id === id ? { ...user, active: !user.active } : user,
-      ),
+        setInputs({
+            username: "",
+            email: "",
+        });
+    };
+
+    //삭제 설정
+    const onRemove = (id: number) => {
+        //users.id 값과 파라미터의 id가 일치하지 않는 요소만 추출하여 리턴
+        //filter
+        setUsers(users.filter((user) => user.id !== id));
+    };
+
+    //토글 설정
+    const onToggle = (id: number) => {
+        setUsers(
+            users.map((user) =>
+                user.id === id ? { ...user, active: !user.active } : user,
+            ),
+        );
+    };
+
+    //활성 사용자수 설정: active가 true인 인원수
+    const countActiveUser=()=>{
+        return users.filter(user=>user.active).length;
+    }
+
+    const count = useMemo(()=>countActiveUser(),[users]);
+
+
+    const totalCount = useMemo(()=>users.length,[users]);
+
+    return (
+        <div className="m-5">
+            {/* user를 등록할 input => CreateUser 컴포넌트 생성 */}
+            <CreateUser
+                username={username}
+                email={email}
+                onChange={onChange}
+                onCreate={onCreate}
+            />
+
+            {/* 출력에 필요한 컴포넌트 UserList1 생성 */}
+            <UserList1 users={users} onRemove={onRemove} onToggle={onToggle} />
+
+            <div>활성인원 수 : {totalCount}명 중 {count}명</div>
+        </div>
     );
-  };
-
-  return (
-    <div className="m-5">
-      {/* user를 등록할 input => CreateUser 컴포넌트 생성 */}
-      <CreateUser
-        username={username}
-        email={email}
-        onChange={onChange}
-        onCreate={onCreate}
-      />
-
-      {/* 출력에 필요한 컴포넌트 UserList1 생성 */}
-      <UserList1 users={users} onRemove={onRemove} onToggle={onToggle}/>
-    </div>
-  );
 }

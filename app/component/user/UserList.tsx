@@ -1,5 +1,3 @@
-import React from 'react'
-
 type UserType={
     id:number,
     username:string,

@@ -1,4 +1,3 @@
-import React from 'react'
 import { userType } from '@/app/type/user'
 
 type userProps = {
@@ -10,7 +9,8 @@ type userProps = {
 export default function User({ user,onRemove,onToggle }: userProps) {
     return (
         <div>
-            <b className={`${user.active ? 'text-red-500' : 'text-black'}`} onClick={()=>onToggle(user.id)}>
+            {/* {()=>onToggle(user.id)} 함수 실행 라인 */}
+            <b className={`${user.active ? 'text-red-500' : 'text-white'} hover:cursor-pointer`} onClick={()=>onToggle(user.id)}>
                 {user.id}. {user.username}
             </b> 
 
